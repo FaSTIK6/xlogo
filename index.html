@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XLogo Online</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app" id="app">
+
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-mark" aria-hidden="true">
+                <svg viewBox="0 0 64 72">
+                    <g stroke="#1f6b3a" stroke-width="3" stroke-linejoin="round">
+                        <ellipse cx="13" cy="30" rx="8" ry="4.5" transform="rotate(-28 13 30)" fill="#7ed48f"/>
+                        <ellipse cx="51" cy="30" rx="8" ry="4.5" transform="rotate(28 51 30)" fill="#7ed48f"/>
+                        <ellipse cx="15" cy="50" rx="8" ry="4.5" transform="rotate(28 15 50)" fill="#7ed48f"/>
+                        <ellipse cx="49" cy="50" rx="8" ry="4.5" transform="rotate(-28 49 50)" fill="#7ed48f"/>
+                        <path d="M32 62 l-4 6 l8 0 z" fill="#7ed48f"/>
+                        <ellipse cx="32" cy="38" rx="17" ry="20" fill="#4fbf6a"/>
+                        <ellipse cx="32" cy="38" rx="11" ry="13" fill="#3aa958" stroke="none"/>
+                        <path d="M32 25v26 M21 38h22 M25 29l14 18 M39 29L25 47"
+                              stroke="#79d68c" stroke-width="2" fill="none" stroke-linecap="round"/>
+                        <circle cx="32" cy="12" r="8.5" fill="#7ed48f"/>
+                        <circle cx="28.5" cy="10" r="1.5" fill="#15321f" stroke="none"/>
+                        <circle cx="35.5" cy="10" r="1.5" fill="#15321f" stroke="none"/>
+                    </g>
+                </svg>
+            </div>
+            <div class="brand-text">
+                <span class="brand-title">XLogo<span>Online</span></span>
+                <span class="brand-sub">Turtle graphics inspired by XLogoOnline (ETH Zürich)</span>
+            </div>
+        </div>
+
+        <nav class="actions">
+            <button class="ghost" id="saveProgramBtn" type="button">Save</button>
+            <button class="ghost" id="loadProgramBtn" type="button">Open</button>
+            <button class="ghost" id="saveImageBtn" type="button">Save image</button>
+            <button class="ghost" id="helpBtn" type="button">Help</button>
+            <button class="ghost icon" id="fullscreenBtn" type="button" title="Fullscreen" aria-label="Fullscreen">⛶</button>
+            <input type="file" id="fileInput" accept=".logo,.txt,text/plain" hidden>
+        </nav>
+    </header>
+
+    <main class="workspace">
+
+        <section class="card stage-card">
+            <div class="card-head">
+                <div class="coords">
+                    <span class="coord"><b id="posX">0</b><em>X</em></span>
+                    <span class="coord"><b id="posY">0</b><em>Y</em></span>
+                    <span class="coord"><b id="headingOut">0°</b><em>heading</em></span>
+                    <span class="pen-chip" id="penChip" title="Pen color"></span>
+                </div>
+                <div class="stage-actions">
+                    <button class="ghost small" id="homeBtn" type="button">Home</button>
+                    <button class="ghost small" id="clearBtn" type="button">Clear</button>
+                </div>
+            </div>
+
+            <div class="stage" id="stage">
+                <div class="view" id="view">
+                    <div class="origin" aria-hidden="true"></div>
+                    <canvas id="canvas"></canvas>
+                    <div class="turtle" id="turtle" aria-hidden="true">
+                        <svg viewBox="0 0 64 72">
+                            <g stroke="#1f6b3a" stroke-width="3" stroke-linejoin="round">
+                                <ellipse cx="13" cy="30" rx="8" ry="4.5" transform="rotate(-28 13 30)" fill="#7ed48f"/>
+                                <ellipse cx="51" cy="30" rx="8" ry="4.5" transform="rotate(28 51 30)" fill="#7ed48f"/>
+                                <ellipse cx="15" cy="50" rx="8" ry="4.5" transform="rotate(28 15 50)" fill="#7ed48f"/>
+                                <ellipse cx="49" cy="50" rx="8" ry="4.5" transform="rotate(-28 49 50)" fill="#7ed48f"/>
+                                <path d="M32 62 l-4 6 l8 0 z" fill="#7ed48f"/>
+                                <ellipse cx="32" cy="38" rx="17" ry="20" fill="#4fbf6a"/>
+                                <ellipse cx="32" cy="38" rx="11" ry="13" fill="#3aa958" stroke="none"/>
+                                <path d="M32 25v26 M21 38h22 M25 29l14 18 M39 29L25 47"
+                                      stroke="#79d68c" stroke-width="2" fill="none" stroke-linecap="round"/>
+                                <circle cx="32" cy="12" r="8.5" fill="#7ed48f"/>
+                                <circle cx="28.5" cy="10" r="1.5" fill="#15321f" stroke="none"/>
+                                <circle cx="35.5" cy="10" r="1.5" fill="#15321f" stroke="none"/>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+                <div class="view-controls">
+                    <button class="ghost small" id="zoomOutBtn" type="button" title="Zoom out">−</button>
+                    <button class="ghost small" id="zoomResetBtn" type="button" title="Reset view">100%</button>
+                    <button class="ghost small" id="zoomInBtn" type="button" title="Zoom in">+</button>
+                    <button class="ghost small" id="panResetBtn" type="button" title="Center view">Center</button>
+                </div>
+                <div class="view-hint">Drag / swipe to pan · Pinch or scroll to zoom</div>
+            </div>
+        </section>
+
+        <section class="card editor-card">
+            <div class="editor-toolbar">
+                <button class="primary" id="runBtn" type="button">▶ Run</button>
+                <button class="danger" id="stopBtn" type="button" disabled>■ Stop</button>
+                <select id="examples" class="select" aria-label="Example programs">
+                    <option value="">Examples…</option>
+                    <option value="square">Square</option>
+                    <option value="triangle">Triangle</option>
+                    <option value="star">Star</option>
+                    <option value="spiral">Spiral</option>
+                    <option value="snowflake">Snowflake</option>
+                    <option value="flower">Flower</option>
+                    <option value="procedure">Procedure</option>
+                </select>
+                <label class="speed" for="speed">Speed
+                    <input type="range" id="speed" min="0" max="100" value="60">
+                </label>
+            </div>
+
+            <div class="editor">
+                <div class="gutter"><div class="gutter-inner" id="gutterInner"></div></div>
+                <textarea id="code" spellcheck="false" wrap="off" aria-label="Logo program"></textarea>
+            </div>
+
+            <div class="console">
+                <div class="console-title">Output</div>
+                <div class="output" id="output"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="statusbar">
+        <span id="status">Ready</span>
+        <span class="hint">Ctrl/⌘ + Enter — run · <b>;</b> — comment · Tab — indent</span>
+    </footer>
+
+</div>
+
+<dialog id="helpDialog" class="help-dialog">
+    <div class="dialog-head">
+        <h2>Command Reference</h2>
+        <button class="ghost icon" id="helpClose" type="button" aria-label="Close">✕</button>
+    </div>
+    <div class="dialog-body">
+
+        <p class="note">
+            Origin <code>(0, 0)</code> is at the center of the canvas. The Y axis points up.
+            Heading <code>0</code> points up, <code>90</code> points to the right. Commands are case-insensitive.
+        </p>
+
+        <h3>Movement</h3>
+        <table>
+            <tbody>
+            <tr><td><code>FD n</code>, <code>FORWARD n</code></td><td>Move forward n steps</td></tr>
+            <tr><td><code>BK n</code>, <code>BACK n</code></td><td>Move back n steps</td></tr>
+            <tr><td><code>RT a</code>, <code>LT a</code></td><td>Turn right / left by a degrees</td></tr>
+            <tr><td><code>HOME</code></td><td>Move to (0,0) and set heading to 0</td></tr>
+            <tr><td><code>SETX x</code>, <code>SETY y</code></td><td>Move to the given coordinate</td></tr>
+            <tr><td><code>SETXY x y</code></td><td>Move to (x, y)</td></tr>
+            <tr><td><code>SETHEADING a</code></td><td>Set absolute heading</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Pen &amp; Colors</h3>
+        <table>
+            <tbody>
+            <tr><td><code>PU</code> / <code>PD</code></td><td>Pen up / pen down</td></tr>
+            <tr><td><code>PE</code> / <code>PPT</code></td><td>Eraser / draw again</td></tr>
+            <tr><td><code>SETPW n</code></td><td>Set pen width (default 2)</td></tr>
+            <tr><td><code>SETPC color</code></td><td>Set pen color</td></tr>
+            <tr><td><code>SETSC color</code></td><td>Set background color</td></tr>
+            <tr><td><code>CS</code>, <code>CLEARSCREEN</code></td><td>Clear screen and return home</td></tr>
+            <tr><td><code>WASH</code></td><td>Clear screen keeping position</td></tr>
+            </tbody>
+        </table>
+        <p class="note">
+            Colors can be given by name (<code>red</code>, <code>blue</code>, <code>green</code>...),
+            palette number <code>0–15</code>, RGB list <code>[255 128 0]</code>, or HEX <code>#ff8000</code>.
+        </p>
+
+        <h3>Control</h3>
+        <table>
+            <tbody>
+            <tr><td><code>REPEAT n [ … ]</code></td><td>Repeat n times (<code>REPCOUNT</code> is the iteration number)</td></tr>
+            <tr><td><code>IF condition [ … ]</code></td><td>Run if condition is true</td></tr>
+            <tr><td><code>IFELSE condition [ … ] [ … ]</code></td><td>Run one of two blocks</td></tr>
+            <tr><td><code>MAKE "name value</code></td><td>Assign a variable, access with <code>:name</code></td></tr>
+            <tr><td><code>TO name :param … END</code></td><td>Define a procedure</td></tr>
+            <tr><td><code>STOP</code></td><td>Exit a procedure</td></tr>
+            <tr><td><code>PRINT value</code></td><td>Print to the Output panel</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Expressions</h3>
+        <p class="note">
+            <code>+ − * /</code>, comparisons <code>= &lt; &gt; &lt;= &gt;= &lt;&gt;</code>,
+            parentheses, <code>AND</code>, <code>OR</code>, <code>NOT</code>.
+            Functions: <code>SUM</code>, <code>DIFFERENCE</code>, <code>PRODUCT</code>, <code>QUOTIENT</code>,
+            <code>SQRT</code>, <code>ABS</code>, <code>ROUND</code>, <code>INT</code>,
+            <code>RANDOM n</code>, <code>SIN</code>, <code>COS</code>, <code>TAN</code>,
+            <code>XCOR</code>, <code>YCOR</code>, <code>HEADING</code>, <code>PI</code>, <code>COUNT</code>.
+        </p>
+
+        <h3>Example</h3>
+<pre><code>to square :size
+  repeat 4 [ fd :size rt 90 ]
+end
+
+cs
+setpc blue
+square 120</code></pre>
+
+        <p class="note">
+            German (<code>vw</code>, <code>re</code>, <code>li</code>, <code>lb</code>)
+            and Russian aliases are also supported.
+        </p>
+
+    </div>
+</dialog>
+
+<script src="script.js"></script>
+</body>
+</html>
