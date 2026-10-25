@@ -1523,7 +1523,7 @@ function init() {
 
     requestAnimationFrame(applyCanvasSize);
 
-    if ('ResizeObserver' in window) {
+    if ('ResizeObserver' in window && stageEl) {
         const observer = new ResizeObserver(() => applyCanvasSize());
         observer.observe(stageEl);
     }
